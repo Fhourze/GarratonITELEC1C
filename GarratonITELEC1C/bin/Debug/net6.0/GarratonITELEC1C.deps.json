@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "GarratonITELEC1C/1.0.0": {
+        "runtime": {
+          "GarratonITELEC1C.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GarratonITELEC1C/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
