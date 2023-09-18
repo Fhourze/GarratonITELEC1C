@@ -44,9 +44,12 @@ namespace GarratonITELEC1C.Controllers
         {
             return View(InstructorList);
         }
+
+
+
         public IActionResult ShowDetails(int id)
         {
-          Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
+            Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
 
             if (instructor != null)
             {
@@ -57,5 +60,52 @@ namespace GarratonITELEC1C.Controllers
                 return NotFound();
             }
         }
+
+
+        [HttpGet]
+        public IActionResult AddInstructor()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddInstructor(Instructor newInstructor)
+        {
+            InstructorList.Add(newInstructor);
+            return View("Instructor", InstructorList);
+        }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
+
+            if (instructor != null)
+            {
+                return View(instructor);
+            }
+            else
+            {
+
+                return NotFound();
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Instructor instructorChange)
+        {
+            Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == instructorChange.Id);
+            if(Instructor != null)
+            {
+                instructor.Id = instructorChange.Id;
+                instructor.FirstName = instructorChange.FirstName;
+                instructor.LastName = instructorChange.LastName;
+                instructor.IsTenured = instructorChange.IsTenured;
+                instructor.HiringDate = instructorChange.HiringDate;
+                instructor.Rank = instructorChange.Rank;
+            }
+            return View("Instructor", InstructorList);
+        }
+
     }
+    
 }
