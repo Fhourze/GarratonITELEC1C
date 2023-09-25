@@ -1,55 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using GarratonITELEC1C.Models;
+using GarratonITELEC1C.Services;
+
 namespace GarratonITELEC1C.Controllers
 {
     public class InstructorController : Controller
     {
-        List<Instructor> InstructorList = new List<Instructor>()
-            {
-                new Instructor()
-                {
-                    Id = 1,
-                    FirstName = "Jimmy",
-                    LastName = "Gusmanos",
-                    IsTenured = true,
-                    Rank = Rank.Instructor,
-                    HiringDate = DateTime.Parse("12/12/2002"),
 
-                },
+        private readonly IMyFakeDataService _fakeData;
 
-                new Instructor()
-                {
-                    Id = 2,
-                    FirstName = "Marsoll",
-                    LastName = "Timbre",
-                    IsTenured = true,
-                    Rank = Rank.AssistantProfessor,
-                    HiringDate = DateTime.Parse("25/05/1993"),
+        public InstructorController(IMyFakeDataService fakeData)
+        {
+            _fakeData = fakeData;
+        }
 
-                },
 
-                new Instructor()
-                {
-                    Id = 3,
-                    FirstName = "Henry",
-                    LastName = "Gusmanos",
-                    IsTenured = false,
-                    Rank = Rank.Professor,
-                    HiringDate = DateTime.Parse("15/08/2023"),
 
-                },
-
-            };
         public IActionResult Instructor()
         {
-            return View(InstructorList);
+            return View(_fakeData.InstructorList);
         }
 
 
 
         public IActionResult ShowDetails(int id)
         {
-            Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
+            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
 
             if (instructor != null)
             {
@@ -70,13 +46,14 @@ namespace GarratonITELEC1C.Controllers
         [HttpPost]
         public IActionResult AddInstructor(Instructor newInstructor)
         {
-            InstructorList.Add(newInstructor);
-            return View("Instructor", InstructorList);
+            _fakeData.InstructorList.Add(newInstructor);
+            return RedirectToAction("Instructor");
         }
+
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
+            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
 
             if (instructor != null)
             {
@@ -93,8 +70,8 @@ namespace GarratonITELEC1C.Controllers
         [HttpPost]
         public IActionResult Edit(Instructor instructorChange)
         {
-            Instructor? instructor = InstructorList.FirstOrDefault(Instructor => Instructor.Id == instructorChange.Id);
-            if(Instructor != null)
+            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(Instructor => Instructor.Id == instructorChange.Id);
+            if (Instructor != null)
             {
                 instructor.Id = instructorChange.Id;
                 instructor.FirstName = instructorChange.FirstName;
@@ -103,9 +80,37 @@ namespace GarratonITELEC1C.Controllers
                 instructor.HiringDate = instructorChange.HiringDate;
                 instructor.Rank = instructorChange.Rank;
             }
-            return View("Instructor", InstructorList);
+            return RedirectToAction("Instructor");
         }
 
-    }
-    
+
+
+
+
+        [HttpGet]
+        public IActionResult DeleteInstructor(int id)
+        {
+            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(Instructor => Instructor.Id == id);
+
+            if (instructor != null)
+            {
+                return View(instructor);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult DeleteInstructor(Instructor deleteInstructor)
+        {
+            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(instructor => instructor.Id == deleteInstructor.Id);
+            _fakeData.InstructorList.Remove(instructor);
+            return RedirectToAction("Instructor");
+        }
+
+
+    }    
 }
