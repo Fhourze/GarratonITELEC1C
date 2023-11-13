@@ -1,11 +1,14 @@
 
+using GarratonITELEC1C.Data;
 using GarratonITELEC1C.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IMyFakeDataService, MyFakeDataService>();
+/*builder.Services.AddSingleton<IMyFakeDataService, MyFakeDataService>();*/
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -14,6 +17,9 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
+var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+context.Database.EnsureCreated();
 app.UseStaticFiles();
 
 app.UseRouting();
